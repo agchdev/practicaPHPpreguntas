@@ -52,7 +52,6 @@
             echo json_encode($resultados);
         }
     }
-
     public class usuario{
         // Atributos de la clase
         private $bd; // Para conectarse con la base de datos
@@ -60,7 +59,6 @@
         private $tmp_inicio;
         private $tmp_final;
         private $tmp_total;
-
         // Para crear una instancia de usuario
         public function __contructor($db, int $u=0, int $tmpIn=0, int $tmpFn=0, int $tmpTo=0){
             $this->bd=$db; // La conexion
@@ -68,6 +66,33 @@
             $this->tmp_inicio=$tmpIn;
             $this->tmp_final=$tmpFn;
             $this->tmp_total=$tmpto;
+        }
+        // Para añadir usuarios a la base de datos
+        public function insertarUsuario(){
+            try {
+                $consulta = "INSERT INTO usuarios(usuario, tmpInicio, tmpFinal, tmpTotal) VALUES (".$this->tmp_inicio.",".$this->tmp_final.",".$this->tmp_total.");"; // Tal vez falle el punto y coma
+                $stmt = $this->bd->prepare($consulta);
+                if (!$stmt) {
+                    throw new Exception("Error al preparar la consulta: " . $this->bd->error);
+                }
+                // Vincula los parámetros
+                $stmt->bind_param(
+                    "siii",  // Tipos de datos: string, string, int, string, string
+                    $this->username,
+                    $this->tmp_inicio,
+                    $this->tmp_final,
+                    $this->tmp_total
+                );
+                // Ejecuta la consulta
+                if (!$stmt->execute()) {
+                    throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+                }
+                // Cierra el statement
+                $stmt->close();
+            }catch (Exception $e) {
+                // Manejo de errores
+                echo "Error: " . $e->getMessage();
+            }
         }
 
     }
