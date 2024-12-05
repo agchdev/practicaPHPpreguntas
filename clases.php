@@ -62,7 +62,7 @@
         private $tmp_total;
 
         // Para crear una instancia de usuario
-        public function __contructor($db, String $u="", String $tmpIn="", String $tmpFn="", String $tmpTo=""){
+        public function __contructor($db, int $u=0, int $tmpIn=0, int $tmpFn=0, int $tmpTo=0){
             $this->bd=$db; // La conexion
             $this->username=$u; // El nombre de usuario
             $this->tmp_inicio=$tmpIn;
