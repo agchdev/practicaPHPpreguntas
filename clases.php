@@ -2,26 +2,26 @@
 //$bd->set_charset('utf8')
     require_once("inc/conexion.php");
     // Creacion de la clase preguntas
-    public class pregunta{
+    class pregunta{
         // Atributos de la clase
         private $bd; // Para conectarse con la base de datos
         private $textPregunta; // Para el texto de la pregunta
         private $respuestaPregunta; // PAra la respuesta de la pregunta
         // Para crear una instancia de preguntas
-        public function __contructor($db, String $tp="", String $rp=""){
+        public function __construct ($db, String $tp="", String $rp=""){
             $this->bd=$db; // La conexion
             $this->textPregunta=$tp; // El texto de la pregunta
             $this->respuestaPregunta=$rp; // La respuesta de la pregunta
         }
         // Una funcion para insertar preguntas, por si hago un panel de administrador
-        public insertarPregunta(){
+        public function insertarPregunta(){
             // $consulta = "SELECT * FROM cursosdb";
             // $sentencia = $conexion->prepare($consulta);
             // $sentencia->execute();
             // $resultados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
             // echo json_encode($resultados)
             try {
-                $consulta = "INSERT INTO preguntas(textPregunta, respuestaPregunta) VALUES (".$this->textPregunta.",".$this->respuestaPregunta.");"; // Tal vez falle el punto y coma
+                $consulta = "INSERT INTO preguntas(textPregunta, respuestaPregunta) VALUES (?,?);"; // Tal vez falle el punto y coma
                 $stmt = $this->bd->prepare($consulta);
                 if (!$stmt) {
                     throw new Exception("Error al preparar la consulta: " . $this->bd->error);
@@ -44,7 +44,7 @@
             }
         }
         //Para seleccionar una pregunta
-        public extraerPreguntas(){
+        public function extraerPreguntas(){
             $consulta = "SELECT * FROM preguntas";
             $sentencia = $conexion->prepare($consulta);
             $sentencia->execute();
@@ -52,7 +52,7 @@
             echo json_encode($resultados);
         }
     }
-    public class usuario{
+    class usuario{
         // Atributos de la clase
         private $bd; // Para conectarse con la base de datos
         private $username; 
@@ -60,20 +60,20 @@
         private $tmp_final;
         private $tmp_total;
         // Para crear una instancia de usuario
-        public function __contructor($db, int $u=0, int $tmpIn=0, int $tmpFn=0, int $tmpTo=0){
+        public function __construct ($db, String $u="", int $tmpIn=0, int $tmpFn=0, int $tmpTo=0){
             $this->bd=$db; // La conexion
             $this->username=$u; // El nombre de usuario
             $this->tmp_inicio=$tmpIn;
             $this->tmp_final=$tmpFn;
-            $this->tmp_total=$tmpto;
+            $this->tmp_total=$tmpTo;
         }
         // Para añadir usuarios a la base de datos
         public function insertarUsuario(){
             try {
-                $consulta = "INSERT INTO usuarios(usuario, tmpInicio, tmpFinal, tmpTotal) VALUES (".$this->tmp_inicio.",".$this->tmp_final.",".$this->tmp_total.");"; // Tal vez falle el punto y coma
+                $consulta = "INSERT INTO usuarios(usuario, tmpInicio, tmpFinal, tmpTotal) VALUES (?,?,?,?);"; // Tal vez falle el punto y coma
                 $stmt = $this->bd->prepare($consulta);
                 if (!$stmt) {
-                    throw new Exception("Error al preparar la consulta: " . $this->bd->error);
+                    header("Location:index.php?errIni=1");
                 }
                 // Vincula los parámetros
                 $stmt->bind_param(
@@ -85,13 +85,13 @@
                 );
                 // Ejecuta la consulta
                 if (!$stmt->execute()) {
-                    throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+                    header("Location:index.php?errIni=1");
                 }
                 // Cierra el statement
                 $stmt->close();
             }catch (Exception $e) {
                 // Manejo de errores
-                echo "Error: " . $e->getMessage();
+                header("Location:index.php?errIni=1");
             }
         }
 
