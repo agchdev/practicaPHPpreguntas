@@ -9,7 +9,10 @@
     <?php
     if(isset($_POST["enviar"])){
         require_once("inc/conexion.php");
-        
+        require_once "clases.php";
+
+        $usuario=$_POST["username"];
+        $cli=new usuario($db);
     }else{
     ?>
     <main>
