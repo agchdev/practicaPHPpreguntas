@@ -24,25 +24,20 @@
             if($_GET["errIni"] == 1){
                 ?>
                 <div class="frame">
-                    <div class="modal">
-                    <img src="https://100dayscss.com/codepen/alert.png" width="44" height="38" />
-                        <span class="title">ERROR!</span>
-                        <p>Este nombre de usuario ya está en uso.</p>
-                        <div class="button">Cerrar</div>
-                    </div>
+                    
                 </div>
                 <?php
             }
         }
         ?>
-        <h2 class="logoText">AGCH TEST!</h2> 
+        <h2 class="logoText roboto-bold">AGCH TEST!</h2> 
         <div>
             <form action="index.php" method="post" enctype="multipart/form-data">
                 <input type="text" name="username" id="username" placeholder="Nombre de usuario...">
                 <input type="submit" name="enviar" id="enviar" value="enviar">
             </form>
         </div>
-        <p>Mira el <a href="">rankin</a> directamente pinchando en este enlace <a href="">RANKING</a></p>
+        <p class="footer">Mira el <a href="">rankin</a> directamente pinchando en este enlace <a href="">RANKING</a></p>
         </section>
     </main>
     <?php
