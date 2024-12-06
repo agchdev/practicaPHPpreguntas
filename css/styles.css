@@ -181,6 +181,10 @@ table {
     font-family: Montserrat, "Noto Sans Arabic", "Helvetica Neue", Helvetica, Arial, "Bai Jamjuree", sans-serif;
 }
 
+.logoText{
+	
+}
+
 @keyframes show-modal {
 	0% {
 		transform: scale(0);
