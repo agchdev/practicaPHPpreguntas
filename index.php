@@ -35,7 +35,7 @@
             }
         }
         ?>
-        <h2>AGCH TEST!</h2>
+        <h2>AGCH TEST!</h2> 
         <div>
             <form action="index.php" method="post" enctype="multipart/form-data">
                 <input type="text" name="username" id="username" placeholder="Nombre de usuario...">
