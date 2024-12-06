@@ -69,11 +69,13 @@
         }
         // Para añadir usuarios a la base de datos
         public function insertarUsuario(){
+            $error = false;
             try {
                 $consulta = "INSERT INTO usuarios(usuario, tmpInicio, tmpFinal, tmpTotal) VALUES (?,?,?,?);"; // Tal vez falle el punto y coma
                 $stmt = $this->bd->prepare($consulta);
                 if (!$stmt) {
                     header("Location:index.php?errIni=1");
+                    $error = true;
                 }
                 // Vincula los parámetros
                 $stmt->bind_param(
@@ -86,12 +88,14 @@
                 // Ejecuta la consulta
                 if (!$stmt->execute()) {
                     header("Location:index.php?errIni=1");
+                    $error = true;
                 }
                 // Cierra el statement
                 $stmt->close();
             }catch (Exception $e) {
                 // Manejo de errores
                 header("Location:index.php?errIni=1");
+                $error = true;
             }
         }
 
