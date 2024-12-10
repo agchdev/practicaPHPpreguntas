@@ -11,7 +11,7 @@
 
         require_once("inc/conexion.php");
         require_once "clases.php";
-        
+
         $codPreg = [];
         $codPreg[] = rand(1, 10);
         $cont = 0;
@@ -19,7 +19,7 @@
         if(isset($_POST["enviar"])){
             // Saca 5 numeros de manera aleatoria
             $nrandom = rand(1, 10);
-            while(!in_array($nrandom, $codPreg){ 
+            while(!in_array($nrandom, $codPreg)){ 
                 $nrandom = rand(1, 10);
                 $codPreg[] = $nrandom;
                 $cont++;
