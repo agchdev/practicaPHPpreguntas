@@ -7,6 +7,8 @@
 </head>
 <body>
     <?php
+        header('Content-Type: text/html; charset=UTF-8');
+
         require_once("inc/conexion.php");
         require_once "clases.php";
 
@@ -25,6 +27,9 @@
         for ($i=0; $i < 5; $i++) { 
             $preguntas[] = new pregunta($conexion, $codPreg[$i]);
         }
+        $aciertos=0;
+        $acierto=false;
+        $preguntas[0]->mostrarPregunta();
     ?>
 
     
