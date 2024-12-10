@@ -32,6 +32,7 @@
     
         <form action="preguntas.php" method="post" enctype="multipart/form-data">
     <?php
+            echo var_dump($codPreg);
             $pregunta->mostrarPregunta();
     ?>
             <input type="submit" name="enviar" value="enviar">
