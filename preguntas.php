@@ -11,27 +11,35 @@
 
         require_once("inc/conexion.php");
         require_once "clases.php";
-
+        
         $codPreg = [];
+        $codPreg[] = rand(1, 10);
         $cont = 0;
 
-        // Saca 5 numeros de manera aleatoria
-        while($cont<5){ 
+        if(isset($_POST["enviar"])){
+            // Saca 5 numeros de manera aleatoria
             $nrandom = rand(1, 10);
-            if(!in_array($nrandom, $codPreg)){
+            while(!in_array($nrandom, $codPreg){ 
+                $nrandom = rand(1, 10);
                 $codPreg[] = $nrandom;
                 $cont++;
-            };
+            }
+            $preguntas = [];
+            for ($i=0; $i < 5; $i++) { 
+                $preguntas[] = new pregunta($conexion, $codPreg[$i]);
+            }
+            $aciertos=0;
+            $acierto=false;
         }
-        $preguntas = [];
-        for ($i=0; $i < 5; $i++) { 
-            $preguntas[] = new pregunta($conexion, $codPreg[$i]);
-        }
-        $aciertos=0;
-        $acierto=false;
-        $preguntas[0]->mostrarPregunta();
     ?>
-
     
+        <form action="preguntas.php" method="post" enctype="multipart/form-data">
+    <?php
+            $preguntas[0]->mostrarPregunta();
+    ?>
+            <input type="submit" name="enviar" value="enviar">
+        </form>
+    <?php
+    ?>
 </body>
 </html>

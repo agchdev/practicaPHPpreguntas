@@ -1,6 +1,5 @@
 <?php
 //$bd->set_charset('utf8')
-    header('Content-Type: text/html; charset=UTF-8');
 
     require_once("inc/conexion.php");
     // Creacion de la clase preguntas
@@ -52,6 +51,7 @@
             $consulta = "SELECT * FROM preguntas WHERE idPregunta=".$this->codPregunta;
             $sentencia = $this->bd->prepare($consulta); //Devuelve un objeto del tipo mySQLli
             // Compruebo que este bien la sentencia
+            $this->bd->set_charset("utf8");
             if (!$sentencia) {
                 throw new Exception("Error al preparar la consulta: " . $this->bd->error);
             }
@@ -63,12 +63,10 @@
             
             while($sentencia->fetch()){
                 $nRespuestas = explode(",",$this->respuestaPregunta);
-                echo "<form>
-                    <h3>".$this->textPregunta."</h3>";
-                    for ($i=0; $i < count($nRespuestas); $i++) { 
-                        echo "<input type=\"text\" name=\"respuesta".$i."\">";
-                    }
-                echo "</form>";
+                echo "<h3>".$this->textPregunta."</h3>";
+                for ($i=0; $i < count($nRespuestas); $i++) { 
+                    echo "<input type=\"text\" name=\"respuesta".$i."\">";
+                }
             }
             $sentencia->close();
         }
