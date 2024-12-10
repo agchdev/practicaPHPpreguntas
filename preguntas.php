@@ -16,30 +16,34 @@
         $codPreg[] = rand(1, 10);
         $cont = 0;
 
-        if(isset($_POST["enviar"])){
+        if(isset($_POST["comenzar"]) || isset($_POST["enviar"])){
             // Saca 5 numeros de manera aleatoria
             $nrandom = rand(1, 10);
             while(!in_array($nrandom, $codPreg)){ 
-                $nrandom = rand(1, 10);
-                $codPreg[] = $nrandom;
-                $cont++;
+                $nrandom = rand(1, 10);  
             }
-            $preguntas = [];
-            for ($i=0; $i < 5; $i++) { 
-                $preguntas[] = new pregunta($conexion, $codPreg[$i]);
-            }
+            $codPreg[] = $nrandom;
+            $cont++;
+            $pregunta = new pregunta($conexion, $nrandom);
             $aciertos=0;
             $acierto=false;
-        }
+        
     ?>
     
         <form action="preguntas.php" method="post" enctype="multipart/form-data">
     <?php
-            $preguntas[0]->mostrarPregunta();
+            $pregunta->mostrarPregunta();
     ?>
             <input type="submit" name="enviar" value="enviar">
         </form>
     <?php
+        }else{
+            ?>
+            <form action="preguntas.php" method="post" enctype="multipart/form-data">
+                <input type="submit" name="comenzar" value="COMENZAR">
+            </form>
+            <?php
+        }
     ?>
 </body>
 </html>
