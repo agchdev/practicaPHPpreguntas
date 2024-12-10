@@ -6,6 +6,27 @@
     <title>AGCHTEST-TEST</title>
 </head>
 <body>
+    <?php
+        require_once("inc/conexion.php");
+        require_once "clases.php";
+
+        $codPreg = [];
+        $cont = 0;
+
+        // Saca 5 numeros de manera aleatoria
+        while($cont<5){ 
+            $nrandom = rand(1, 10);
+            if(!in_array($nrandom, $codPreg)){
+                $codPreg[] = $nrandom;
+                $cont++;
+            };
+        }
+        $preguntas = [];
+        for ($i=0; $i < 5; $i++) { 
+            $preguntas[] = new pregunta($conexion, $codPreg[$i]);
+        }
+    ?>
+
     
 </body>
 </html>

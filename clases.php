@@ -5,11 +5,13 @@
     class pregunta{
         // Atributos de la clase
         private $bd; // Para conectarse con la base de datos
+        private $codPregunta; // Para el texto de la pregunta
         private $textPregunta; // Para el texto de la pregunta
         private $respuestaPregunta; // PAra la respuesta de la pregunta
         // Para crear una instancia de preguntas
-        public function __construct ($db, String $tp="", String $rp=""){
+        public function __construct ($db,int $cp=0, String $tp="", String $rp=""){
             $this->bd=$db; // La conexion
+            $this->codPregunta=$cp //Codigo de pregunta
             $this->textPregunta=$tp; // El texto de la pregunta
             $this->respuestaPregunta=$rp; // La respuesta de la pregunta
         }
@@ -43,13 +45,53 @@
                 echo "Error: " . $e->getMessage();
             }
         }
-        //Para seleccionar una pregunta
+        // Para seleccionar una pregunta
         public function extraerPreguntas(){
-            $consulta = "SELECT * FROM preguntas";
-            $sentencia = $conexion->prepare($consulta);
-            $sentencia->execute();
-            $resultados = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($resultados);
+            $preguntas = [];
+            $cont = 0;
+            // Saca 5 nunmero de manera aleatoria
+            while($cont<5){ 
+                $nrandom = rand(1, 10);
+                if(!in_array($nrandom, $preguntas)){
+                    $preguntas[] = $nrandom;
+                    $cont++;
+                };
+            }
+            for ($i=0; $i < 5; $i++) { 
+                $this->mostrarPregunta($preguntas[$i]);
+            }
+        }
+        public function mostrarPregunta($cod){
+            try {
+                $consulta = "SELECT * FROM preguntas WHERE idPregunta=".$cod;
+                $sentencia = $this->bd->prepare($consulta); //Devuelve un objeto del tipo mySQLli
+                // Compruebo que este bien la sentencia
+                if (!$sentencia) {
+                    throw new Exception("Error al preparar la consulta: " . $this->bd->error);
+                }
+
+                //Bindear el resultado. Pasarle donde se van a guardar los resultados
+                $sentencia->bind_result($codPregunta,$textPregunta,$respuestaPregunta);
+                // Ejecuto la sentencia
+                $sentencia->execute();
+                
+                while($sentencia->fetch()){
+                    $nRespuestas = explode(",",$respuestaPregunta);
+                    echo "<p>".count($nRespuestas)."</p>";
+                    echo "<div>";
+                    echo "<h2>".$textPregunta."</h2>";
+                    for ($i=0; $i < count($nRespuestas); $i++) { 
+                        echo "<input type=\"text\" name=\"res".$i."\">";
+                    }
+                    echo "</div>";
+                }
+
+                $sentencia->close();
+
+            } catch (Exception $e) {
+                echo json_encode(["error" => $e->getMessage()]);
+                echo "<p>No hay resultados</p>";
+            }
         }
     }
     class usuario{
@@ -97,6 +139,7 @@
                 header("Location:index.php?errIni=1");
                 $error = true;
             }
+            return $error;
         }
 
     }

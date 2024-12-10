@@ -14,7 +14,9 @@
 
         $usuario=$_POST["username"];
         $usu=new usuario($conexion, $usuario);
-        if($usu->insertarUsuario()) header("Location:preguntas.php");
+        $error = $usu->insertarUsuario();
+        echo "pasa est0 ->".$error;
+        if(!$error) header("Location:preguntas.php");
     }else{
     ?>
     <main>
@@ -42,7 +44,7 @@
                 <input type="submit" name="enviar" id="enviar" value="enviar">
             </form>
         </div>
-        <p class="footer">Mira el <a href="">rankin</a> directamente pinchando en este enlace <a href="">RANKING</a></p>
+        <p class="footer">Mira el <a href="">ranking</a> directamente pinchando en este enlace <a href="">RANKING</a></p>
         </section>
     </main>
     <?php
