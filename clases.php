@@ -78,6 +78,7 @@
         private $tmp_inicio;
         private $tmp_final;
         private $tmp_total;
+        private $preguntas;
         // Para crear una instancia de usuario
         public function __construct ($db, String $u="", int $tmpIn=0, int $tmpFn=0, int $tmpTo=0){
             $this->bd=$db; // La conexion
@@ -85,6 +86,21 @@
             $this->tmp_inicio=$tmpIn;
             $this->tmp_final=$tmpFn;
             $this->tmp_total=$tmpTo;
+            $this->preguntas->generarCodPreguntas();
+        }
+
+        public function generarCodPreguntas(){
+            $cont = 0;
+            $codPreg = [];
+            // Saca 5 numeros de manera aleatoria
+            while($cont < 5){
+                $nrandom = rand(1, 10);  
+                if(!in_array($nrandom, $codPreg)){ 
+                    $codPreg[] = $nrandom;
+                    $cont++;
+                }
+            }
+            return $codPreg;
         }
         // Para añadir usuarios a la base de datos
         public function insertarUsuario(){
