@@ -86,7 +86,6 @@
             $this->tmp_inicio=$tmpIn;
             $this->tmp_final=$tmpFn;
             $this->tmp_total=$tmpTo;
-            $this->preguntas->generarCodPreguntas();
         }
 
         public function generarCodPreguntas(){
