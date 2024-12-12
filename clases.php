@@ -47,27 +47,51 @@
             }
         }
         //Mostrar pregunta
-        public function mostrarPregunta(){
-            $consulta = "SELECT * FROM preguntas WHERE idPregunta=".$this->codPregunta;
+        public function mostrarPregunta($usu){
+            $strPreguntas="";
+            $codPregunta=0;
+            $consultaUsu = "SELECT preguntas FROM usuarios WHERE usuario='".$usu."'";
+            $sentenciaUsu = $this->bd->prepare($consultaUsu); //Devuelve un objeto del tipo mySQLli
+            $this->bd->set_charset("utf8");
+            //Bindear el resultado. Pasarle donde se van a guardar los resultados
+            $sentenciaUsu->bind_result($strPreguntas);
+            // Ejecuto la sentencia
+            $sentenciaUsu->execute();
+            
+            if (!$sentenciaUsu) {
+                throw new Exception("Error al preparar la consulta: ".$this->bd->error);
+            }
+
+            while($sentenciaUsu->fetch()){
+                $this->codPregunta = $strPreguntas[0];
+            }
+            echo "<h1>".$this->codPregunta."</h1>";
+            echo "<h1>".gettype($this->codPregunta)."</h1>";
+            $this->codPregunta = intval($this->codPregunta);
+            echo "<h1>".gettype($this->codPregunta)."</h1>";
+            $sentenciaUsu->close();
+
+            $consulta = "SELECT textPregunta, respuestaPregunta FROM preguntas WHERE idPregunta=".$this->codPregunta;
             $sentencia = $this->bd->prepare($consulta); //Devuelve un objeto del tipo mySQLli
             // Compruebo que este bien la sentencia
-            $this->bd->set_charset("utf8");
+            
             if (!$sentencia) {
                 throw new Exception("Error al preparar la consulta: " . $this->bd->error);
             }
 
             //Bindear el resultado. Pasarle donde se van a guardar los resultados
-            $sentencia->bind_result($this->codPregunta,$this->textPregunta,$this->respuestaPregunta);
+            $sentencia->bind_result($this->textPregunta,$this->respuestaPregunta);
             // Ejecuto la sentencia
             $sentencia->execute();
+            $sentencia->fetch();
             
-            while($sentencia->fetch()){
-                $nRespuestas = explode(",",$this->respuestaPregunta);
-                echo "<h3>".$this->textPregunta."</h3>";
-                for ($i=0; $i < count($nRespuestas); $i++) { 
-                    echo "<input type=\"text\" name=\"respuesta".$i."\">";
-                }
+            echo "<h2>".$this->textPregunta."</h2>";
+            $nRespuestas = explode(",",$this->respuestaPregunta);
+            echo "<h3>".$this->textPregunta."</h3>";
+            for ($i=0; $i < count($nRespuestas); $i++) { 
+                echo "<input type=\"text\" name=\"respuesta".$i."\">";
             }
+
             $sentencia->close();
         }
     }
@@ -86,26 +110,28 @@
             $this->tmp_inicio=$tmpIn;
             $this->tmp_final=$tmpFn;
             $this->tmp_total=$tmpTo;
+            $this->preguntas=$this->generarCodPreguntas();
         }
 
         public function generarCodPreguntas(){
             $cont = 0;
             $codPreg = [];
+            $str = "";
             // Saca 5 numeros de manera aleatoria
             while($cont < 5){
                 $nrandom = rand(1, 10);  
                 if(!in_array($nrandom, $codPreg)){ 
-                    $codPreg[] = $nrandom;
+                    $str .= $nrandom;
                     $cont++;
                 }
             }
-            return $codPreg;
+            return $str;
         }
         // Para añadir usuarios a la base de datos
         public function insertarUsuario(){
             $error = false;
             try {
-                $consulta = "INSERT INTO usuarios(usuario, tmpInicio, tmpFinal, tmpTotal) VALUES (?,?,?,?);"; // Tal vez falle el punto y coma
+                $consulta = "INSERT INTO usuarios(usuario, tmpInicio, tmpFinal, tmpTotal, preguntas) VALUES (?,?,?,?,?);"; // Tal vez falle el punto y coma
                 $stmt = $this->bd->prepare($consulta);
                 if (!$stmt) {
                     header("Location:index.php?errIni=1");
@@ -113,11 +139,12 @@
                 }
                 // Vincula los parámetros
                 $stmt->bind_param(
-                    "siii",  // Tipos de datos: string, string, int, string, string
+                    "siiis",  // Tipos de datos: string, string, int, string, string
                     $this->username,
                     $this->tmp_inicio,
                     $this->tmp_final,
-                    $this->tmp_total
+                    $this->tmp_total,
+                    $this->preguntas
                 );
                 // Ejecuta la consulta
                 if (!$stmt->execute()) {

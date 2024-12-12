@@ -12,38 +12,28 @@
         require_once("inc/conexion.php");
         require_once "clases.php";
 
-        $codPreg = [];
-        $codPreg[] = rand(1, 10);
-        $cont = 0;
+        if(isset($_GET["usu"]))$usu = $_GET["usu"];
 
         if(isset($_POST["comenzar"]) || isset($_POST["enviar"])){
-            // Saca 5 numeros de manera aleatoria
-            $nrandom = rand(1, 10);
-            while(!in_array($nrandom, $codPreg)){ 
-                $nrandom = rand(1, 10);  
-            }
-            $codPreg[] = $nrandom;
-            $cont++;
-            $pregunta = new pregunta($conexion, $nrandom);
-            $aciertos=0;
-            $acierto=false;
+            $pregunta = new pregunta($conexion);
         
-    ?>
     
-        <form action="preguntas.php" method="post" enctype="multipart/form-data">
-    <?php
-            echo var_dump($codPreg);
-            $pregunta->mostrarPregunta();
+    echo "<form action=\"preguntas.php?usu=".$usu."\" method=\"post\" enctype=\"multipart/form-data\">";
+    
+        $pregunta->mostrarPregunta($usu);
     ?>
             <input type="submit" name="enviar" value="enviar">
         </form>
     <?php
         }else{
-            ?>
-            <form action="preguntas.php" method="post" enctype="multipart/form-data">
-                <input type="submit" name="comenzar" value="COMENZAR">
-            </form>
-            <?php
+    
+        echo "<form action=\"preguntas.php?usu=".$usu."\" method=\"post\" enctype=\"multipart/form-data\">";
+        echo $usu;
+    ?>
+            <input type="submit" name="comenzar" value="comenzar">
+
+        </form>
+    <?php
         }
     ?>
 </body>

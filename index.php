@@ -15,8 +15,9 @@
         $usuario=$_POST["username"];
         $usu=new usuario($conexion, $usuario);
         $error = $usu->insertarUsuario();
+        $array = $usu->generarCodPreguntas();
         echo "pasa est0 ->".$error;
-        if(!$error) header("Location:preguntas.php");
+        if(!$error) header("Location:preguntas.php?usu=".$usuario);
     }else{
     ?>
     <main>
